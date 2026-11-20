@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel de control Catrina</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--n:#12263f;--b:#1f5fbf;--bg:#f2f4f7;--ln:#d8dee6;--tx:#1c2733;--mu:#667585;--rd:#b42318}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 .95rem "IBM Plex Sans",system-ui,sans-serif}
+header{background:var(--n);color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:1.1rem;font-weight:600}
+#st{display:flex;align-items:center;gap:8px;font-size:.85rem}
+#st i{width:9px;height:9px;border-radius:50%;background:#8896a5}
+#st.on i{background:#2ecc71}
+main{max-width:920px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:260px 1fr;gap:16px}
+@media(max-width:700px){main{grid-template-columns:1fr}}
+section{background:#fff;border:1px solid var(--ln);border-radius:6px;padding:18px}
+h2{margin:0 0 12px;font-size:.95rem;font-weight:600}
+svg{width:100%;max-width:200px;display:block;margin:0 auto}
+#j{transition:transform .15s}.o #j{transform:translateY(10px)}
+dl{margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:.85rem}
+dt{color:var(--mu)}dd{margin:0;text-align:right}
+.r{display:grid;gap:10px;margin-bottom:20px}
+.r2{grid-template-columns:1fr 1fr}.r3{grid-template-columns:repeat(3,1fr)}
+button{font-weight:500;font-size:.9rem;font-family:inherit;padding:12px 8px;border-radius:4px;border:1px solid var(--b);background:#fff;color:var(--b);cursor:pointer}
+button:hover:not(:disabled){background:#eaf1fb}
+button.p{background:var(--b);color:#fff}button.p:hover:not(:disabled){background:#194f9f}
+button.d{border-color:var(--rd);color:var(--rd)}button.d:hover:not(:disabled){background:#fdecea}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+#c{width:auto;padding:8px 16px;font-size:.85rem;background:transparent;color:#fff;border-color:#fff}
+#c:hover{background:#ffffff22!important}
+ul{list-style:none;margin:0;padding:0;font-size:.82rem;color:var(--mu);max-height:110px;overflow:auto}
+li{padding:5px 0;border-top:1px solid var(--ln);display:flex;justify-content:space-between}
+</style></head><body>
+<header><h1>Panel de control · Catrina</h1>
+<div id="st"><i></i><span>Sin conexión</span> <button id="c">Conectar</button></div></header>
+<main>
+<section><h2>Unidad</h2><svg id="sk" viewBox="0 0 200 200">
+<ellipse cx="100" cy="112" rx="82" ry="62" fill="#ff7a00"/>
+<path d="M100 50c-26 14-26 110 0 124M100 50c26 14 26 110 0 124M64 56c-34 20-34 96 0 114M136 56c34 20 34 96 0 114" fill="none" stroke="#c95a00" stroke-width="4"/>
+<path d="M70 20h60l6 30H64z" fill="#5b2a86"/><ellipse cx="100" cy="52" rx="66" ry="11" fill="#7a3aa8"/>
+<g fill="#e4007c"><circle cx="72" cy="48" r="9"/><circle cx="128" cy="48" r="9"/></g><g fill="#00b3a4"><circle cx="100" cy="44" r="8"/></g><g fill="#ffd23f"><circle cx="72" cy="48" r="4"/><circle cx="128" cy="48" r="4"/></g>
+<g fill="#1a0b2e"><circle cx="70" cy="95" r="18"/><circle cx="130" cy="95" r="18"/><path d="M100 108l-8 15h16z"/></g>
+<g fill="#e4007c"><circle cx="70" cy="95" r="7"/><circle cx="130" cy="95" r="7"/></g>
+<rect x="56" y="136" width="88" height="40" rx="12" fill="#1a0b2e"/>
+<path d="M62 136l8 14 8-14 8 14 8-14 8 14 8-14 8 14 8-14 8 14 8-14z" fill="#f5efe6"/>
+<g id="j"><path d="M64 166l8-14 8 14 8-14 8 14 8-14 8 14 8-14 8 14 8-14 8 14z" fill="#f5efe6"/></g>
+</svg>
+<dl><dt>Dispositivo</dt><dd id="dv">ESP32_Catrina</dd><dt>Protocolo</dt><dd>Bluetooth LE</dd><dt>Último comando</dt><dd id="lc">—</dd></dl></section>
+<div>
+<section style="margin-bottom:16px"><h2>Expresión</h2><div class="r r2" style="margin:0">
+<button class="p" data-c="M">Abrir mandíbula</button><button class="p" data-c="S">Reproducir sonido</button></div></section>
+<section style="margin-bottom:16px"><h2>Brazos</h2><div class="r r3" style="margin:0">
+<button data-c="L">Izquierdo</button><button data-c="A">Ambos</button><button data-c="R">Derecho</button></div></section>
+<section style="margin-bottom:16px"><h2>Seguridad</h2><div class="r" style="margin:0"><button class="d" data-c="D">Detener todo</button></div></section>
+<section><h2>Registro de actividad</h2><ul id="log"></ul></section>
+</div></main>
+<script>
+const SV="4fafc201-1fb5-459e-8fcc-c5c9c331914b",CH="beb5483e-36e1-4688-b7f5-ea07361b26a8",N={L:"Brazo izquierdo",R:"Brazo derecho",A:"Ambos brazos",M:"Abrir mandíbula",S:"Reproducir sonido",D:"Detener todo"};
+let ch,dev;const $=s=>document.querySelector(s),B=[...document.querySelectorAll("[data-c]")];
+const log=t=>{$("#log").insertAdjacentHTML("afterbegin",`<li><span>${t}</span><span>${new Date().toLocaleTimeString()}</span></li>`)};
+const ui=ok=>{B.forEach(b=>b.disabled=!ok);$("#st").className=ok?"on":"";$("#st span").textContent=ok?"Conectado":"Sin conexión";$("#c").textContent=ok?"Desconectar":"Conectar"};
+ui(false);
+$("#c").onclick=async()=>{
+ if(dev?.gatt.connected)return dev.gatt.disconnect();
+ try{
+  dev=await navigator.bluetooth.requestDevice({filters:[{services:[SV]}]});
+  dev.ongattserverdisconnected=()=>{ui(false);log("Dispositivo desconectado")};
+  ch=await(await(await dev.gatt.connect()).getPrimaryService(SV)).getCharacteristic(CH);
+  $("#dv").textContent=dev.name;ui(true);log("Dispositivo conectado");
+ }catch(e){log(navigator.bluetooth?e.message:"Usa Chrome en Android o escritorio")}
+};
+B.forEach(b=>b.onclick=async()=>{
+ const c=b.dataset.c;
+ try{await ch.writeValueWithoutResponse(new TextEncoder().encode(c));$("#lc").textContent=N[c];log(N[c]);
+  if(c=="M"){$("#sk").classList.add("o");setTimeout(()=>$("#sk").classList.remove("o"),900)}}
+ catch(e){log("Error: "+e.message)}
+});
+</script></body></html>
